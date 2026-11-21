@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MONVEX - Play, Mine, Earn</title>
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. FORCE JOIN SCREEN (চ্যানেলে জয়েন না করলে গেমে ঢুকতে পারবে না) -->
+    <div id="force-join-screen" class="screen active">
+        <div class="force-join-container">
+            <!-- এখানে আপনার বটের ছবির লিংক বসাতে পারেন, আপাতত ডিফল্ট ছবি দেওয়া হলো -->
+            <img src="https://i.ibb.co/6PZ8Z9Z/monvex-bot.jpg" alt="MONVEX Bot" class="bot-logo"> 
+            <h1>Join Our Community</h1>
+            <p>You must join our official channels to play MONVEX and earn rewards.</p>
+            
+            <div class="channel-list">
+                <!-- Official Updates Channel -->
+                <a href="https://t.me/officialupdatesn" target="_blank" class="join-btn">
+                    <span>📢 Official Updates</span> <span>Join</span>
+                </a>
+                <!-- Community Channel -->
+                <a href="https://t.me/monvexcommunity" target="_blank" class="join-btn">
+                    <span>💬 MONVEX Community</span> <span>Join</span>
+                </a>
+            </div>
+
+            <button id="verify-btn" class="verify-btn">Verify & Continue</button>
+            <p class="small-text" id="verify-message"></p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN DASHBOARD (গেমের হোম পেজ) -->
+    <div id="main-screen" class="screen">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="profile-info">
+                <!-- টেলিগ্রাম থেকে ডিপি অটোমেটিক আসবে -->
+                <img id="user-photo" src="https://i.ibb.co/3W1Z8Y7/default-avatar.png" alt="Profile">
+                <div>
+                    <h2 id="user-name">Loading...</h2>
+                    <span id="user-level">Level 1</span>
+                </div>
+            </div>
+            <div class="balance-info">
+                <span class="coin-icon">🪙</span>
+                <span id="coin-balance">0</span>
+            </div>
+        </div>
+
+        <!-- Promotional Banner (Reward Pool) -->
+        <div class="promo-banner">
+            <div class="promo-content">
+                <span class="badge">PROPOSED</span>
+                <h1>$50,000 USDT</h1>
+                <h2>REWARD POOL</h2>
+                <p>COMING SOON ⏳</p>
+                <p class="funding-text">Funding in progress: $0 / $50,000</p>
+                <button id="view-details-btn">View Details</button>
+            </div>
+        </div>
+
+        <!-- Tap to Mine Section -->
+        <div class="tap-section">
+            <div class="energy-bar">
+                <span>Energy: <span id="energy-count">1000</span> / 1000</span>
+            </div>
+            <div class="tap-circle" id="tap-circle">
+                <span class="tap-text">TAP</span>
+                <span class="tap-power">+1</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active">🏠 Home</button>
+            <button class="nav-item">⛏️ Mine</button>
+            <button class="nav-item">👥 Friends</button>
+            <button class="nav-item">💼 Wallet</button>
+        </div>
+    </div>
+
+    <!-- 3. REWARD POOL MODAL (View Details) -->
+    <div id="reward-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2>🏆 Reward Pool Details</h2>
+            <p><strong>Total Pool:</strong> $50,000 USDT (Proposed)</p>
+            <p><strong>Funding Status:</strong> In Progress</p>
+            <hr>
+            <h3>How it works:</h3>
+            <p>Collect Mining Coins during the season. At the end of the season, your share is calculated proportionally based on your eligible coins.</p>
+            <p class="formula">User Reward = (Your Coins / Total Coins) × Funded Pool</p>
+            <p class="disclaimer">⚠️ Note: Mining Coins have no fixed USD value. Rewards are distributed only up to the actual funded amount.</p>
+        </div>
+    </div>
+
+    <!-- Load Scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
