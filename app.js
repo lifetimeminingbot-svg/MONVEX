@@ -1,146 +1,103 @@
-// Firebase Imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// আপনার Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyAj5UW69Ed6BNTZ7uKRjXYF5hCsKoWJyeE",
-  authDomain: "monvex-660f1.firebaseapp.com",
-  projectId: "monvex-660f1",
-  storageBucket: "monvex-660f1.firebasestorage.app",
-  messagingSenderId: "980809538898",
-  appId: "1:980809538898:web:5b176771596b0284b22e8b"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 // Telegram Web App Initialization
 const tg = window.Telegram.WebApp;
-tg.expand(); 
-tg.setHeaderColor('#0A0612'); 
-
-// Global Variables
-let userData = null;
-let tgUser = null;
+tg.expand();
+tg.setHeaderColor('#F8F9FA'); // Match background
 
 // DOM Elements
-const forceJoinScreen = document.getElementById('force-join-screen');
-const mainScreen = document.getElementById('main-screen');
+const joinScreen = document.getElementById('join-screen');
+const appContainer = document.getElementById('app-container');
 const verifyBtn = document.getElementById('verify-btn');
-const verifyMsg = document.getElementById('verify-message');
-const userNameEl = document.getElementById('user-name');
-const userPhotoEl = document.getElementById('user-photo');
-const coinBalanceEl = document.getElementById('coin-balance');
-const tapCircle = document.getElementById('tap-circle');
-const energyCountEl = document.getElementById('energy-count');
+const verifyMsg = document.getElementById('verify-msg');
+const copyBtn = document.getElementById('copy-btn');
 
-// --- 1. INITIALIZATION & AUTH ---
-document.addEventListener('DOMContentLoaded', async () => {
+// 1. Initial Load & User Data
+document.addEventListener('DOMContentLoaded', () => {
+    // Telegram User Data Load
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        tgUser = tg.initDataUnsafe.user;
-        userNameEl.textContent = tgUser.first_name;
-        // টেলিগ্রাম থেকে ডিপি অটোমেটিক সেট হবে
-        userPhotoEl.src = tgUser.photo_url || "https://i.ibb.co/3W1Z8Y7/default-avatar.png"; 
+        const user = tg.initDataUnsafe.user;
         
-        // ডাটাবেস থেকে ইউজার ডাটা লোড করুন
-        await loadUserData(tgUser.id);
+        // Home Page Data
+        document.getElementById('user-name').textContent = user.first_name;
+        document.getElementById('user-id').textContent = `ID: ${user.id}`;
+        if (user.photo_url) {
+            document.getElementById('user-dp').src = user.photo_url;
+            document.getElementById('profile-dp').src = user.photo_url;
+        }
+        
+        // Profile Page Data
+        document.getElementById('profile-name').textContent = user.first_name;
+        document.getElementById('profile-id').textContent = `Telegram ID: ${user.id}`;
+        
+        // Referral Link with User ID
+        document.getElementById('ref-link').value = `https://t.me/MONVEX9_bot?start=${user.id}`;
+
     } else {
-        alert("Please open this app inside Telegram.");
-        tg.close();
+        // Fallback for browser testing
+        document.getElementById('user-name').textContent = "Guest User";
+        document.getElementById('profile-name').textContent = "Guest User";
     }
 });
 
-// --- 2. FORCE JOIN VERIFICATION LOGIC ---
-verifyBtn.addEventListener('click', async () => {
+// 2. Channel Verification Logic (Frontend Demo)
+verifyBtn.addEventListener('click', () => {
     verifyBtn.textContent = "Verifying...";
-    verifyMsg.style.color = "#FFD700";
+    verifyMsg.style.color = "#F59E0B";
     verifyMsg.textContent = "Checking channel membership...";
 
-    // এখানে আপাতত ২ সেকেন্ড পর ধরে নিচ্ছি সে জয়েন করেছে।
+    // Simulate Backend Check Delay
     setTimeout(() => {
-        verifyMsg.style.color = "#00FF00";
+        verifyMsg.style.color = "#10B981";
         verifyMsg.textContent = "Verification Successful!";
         
         setTimeout(() => {
-            forceJoinScreen.classList.remove('active');
-            mainScreen.classList.add('active');
-        }, 1000);
-    }, 2000);
+            joinScreen.classList.remove('active');
+            appContainer.classList.remove('hidden');
+        }, 800);
+    }, 1500);
 });
 
-// --- 3. FIREBASE DATABASE LOGIC ---
-async function loadUserData(telegramId) {
-    const userRef = doc(db, "users", telegramId.toString());
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-        userData = userSnap.data();
-        updateUI();
-    } else {
-        // নতুন ইউজার তৈরি
-        const newUser = {
-            telegramId: telegramId.toString(),
-            username: tgUser.username || "",
-            firstName: tgUser.first_name || "",
-            coins: 0,
-            energy: 1000,
-            energyMax: 1000,
-            tapPower: 1,
-            level: 1,
-            createdAt: new Date().toISOString()
-        };
-        await setDoc(userRef, newUser);
-        userData = newUser;
-        updateUI();
-    }
-}
-
-function updateUI() {
-    if (userData) {
-        coinBalanceEl.textContent = userData.coins;
-        energyCountEl.textContent = userData.energy;
-    }
-}
-
-// --- 4. TAP TO MINE LOGIC ---
-tapCircle.addEventListener('click', async () => {
-    if (userData.energy <= 0) {
-        tg.showAlert("Energy depleted! Wait for refill.");
-        return;
-    }
-
-    // Optimistic UI Update
-    userData.coins += userData.tapPower;
-    userData.energy -= 1;
-    updateUI();
-
-    // Animate Tap
-    tapCircle.style.transform = "scale(0.9)";
-    setTimeout(() => tapCircle.style.transform = "scale(1)", 100);
-
-    // ডাটাবেসে সেভ করা
-    const userRef = doc(db, "users", tgUser.id.toString());
-    await updateDoc(userRef, {
-        coins: userData.coins,
-        energy: userData.energy
+// 3. Navigation Logic
+function navigateTo(pageId) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
     });
-});
+    
+    // Show selected page
+    const selectedPage = document.getElementById(`page-${pageId}`);
+    if (selectedPage) {
+        selectedPage.classList.add('active');
+    }
 
-// --- 5. MODAL LOGIC ---
-const viewDetailsBtn = document.getElementById('view-details-btn');
-const rewardModal = document.getElementById('reward-modal');
-const closeModal = document.getElementById('close-modal');
+    // Update Bottom Nav active state
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.classList.remove('active');
+    });
+    
+    // Find the clicked nav item and set active
+    const navItems = document.querySelectorAll('.nav-item');
+    const pageMap = ['home', 'earn', 'refer', 'wallet', 'profile'];
+    const index = pageMap.indexOf(pageId);
+    if (index !== -1 && navItems[index]) {
+        navItems[index].classList.add('active');
+    }
+}
 
-viewDetailsBtn.addEventListener('click', () => {
-    rewardModal.classList.add('active');
-});
-
-closeModal.addEventListener('click', () => {
-    rewardModal.classList.remove('active');
-});
-
-rewardModal.addEventListener('click', (e) => {
-    if (e.target === rewardModal) rewardModal.classList.remove('active');
+// 4. Copy Referral Link Logic
+copyBtn.addEventListener('click', () => {
+    const linkInput = document.getElementById('ref-link');
+    linkInput.select();
+    linkInput.setSelectionRange(0, 99999);
+    
+    // Use Clipboard API
+    navigator.clipboard.writeText(linkInput.value).then(() => {
+        // Change icon temporarily
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        setTimeout(() => {
+            copyBtn.innerHTML = originalHTML;
+        }, 2000);
+    }).catch(err => {
+        tg.showAlert("Failed to copy link.");
+    });
 });
