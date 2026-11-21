@@ -1,164 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090b14">
-  <title>MONVEX Mini App</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MONVEX - Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-mark">M</div>
-      <div>
-        <div class="brand-name">MONVEX</div>
-        <div class="brand-sub">PLAY • MINE • GROW</div>
-      </div>
-      <button class="icon-button" id="profileShortcut" aria-label="Open profile">●</button>
-    </header>
 
-    <main>
-      <section class="page active" id="homePage">
-        <div class="welcome">
-          <p class="eyebrow">WELCOME TO MONVEX</p>
-          <h1>Mine your<br><span>next level.</span></h1>
-          <p class="muted">Tap, complete tasks, and track your progress.</p>
+    <!-- 1. FORCE JOIN SCREEN -->
+    <div id="join-screen" class="screen active">
+        <div class="join-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="MONVEX Logo" class="app-logo">
+            <h2>Welcome to MONVEX</h2>
+            <p>Join our official channels to start earning.</p>
+            
+            <a href="https://t.me/officialupdatesn" target="_blank" class="join-btn">
+                <span><i class="fa-brands fa-telegram"></i> Official Updates</span>
+                <span class="btn-status">Join</span>
+            </a>
+            <a href="https://t.me/monvexcommunity" target="_blank" class="join-btn">
+                <span><i class="fa-brands fa-telegram"></i> Community Chat</span>
+                <span class="btn-status">Join</span>
+            </a>
+
+            <button id="verify-btn" class="primary-btn">Verify & Continue</button>
+            <p id="verify-msg" class="error-text"></p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP (Hidden initially) -->
+    <div id="app-container" class="app-container hidden">
+        
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active">
+            <header class="header">
+                <div class="user-info">
+                    <img id="user-dp" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile">
+                    <div>
+                        <h3 id="user-name">Loading...</h3>
+                        <p id="user-id">ID: ---</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-bell icon-btn"></i>
+            </header>
+
+            <div class="balance-card">
+                <p>Total Mining Coins</p>
+                <h1>0 <span>MC</span></h1>
+                <div class="balance-footer">
+                    <span>Demo Balance</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+            <div class="banner-card">
+                <h3>Community Pool</h3>
+                <p>Proposed Reward: $50,000 USDT</p>
+                <span class="badge">Coming Soon</span>
+            </div>
+
+            <button class="primary-btn" onclick="navigateTo('earn')">Go to Earn</button>
+
+            <div class="section-title">Recent Activity</div>
+            <div class="empty-state">No recent activity found.</div>
         </div>
 
-        <div class="balance-card">
-          <div class="card-label">YOUR MINING COINS</div>
-          <div class="coin-balance" id="homeCoins">0 <small>MVC</small></div>
-          <div class="card-foot">Demo balance · Not USDT</div>
+        <!-- EARN PAGE -->
+        <div id="page-earn" class="page">
+            <header class="header">
+                <h2>Earn Rewards</h2>
+            </header>
+            <div class="task-card">
+                <div class="task-info">
+                    <h4>Daily Check-in</h4>
+                    <p>Claim your daily 100 MC</p>
+                </div>
+                <button class="action-btn">Start</button>
+            </div>
+            <div class="task-card">
+                <div class="task-info">
+                    <h4>Watch Video</h4>
+                    <p>Earn 50 MC</p>
+                </div>
+                <button class="action-btn">Start</button>
+            </div>
         </div>
 
-        <div class="pool-banner">
-          <div class="pool-top">
-            <span class="pill">PROPOSED REWARD POOL</span>
-            <span class="pill coming">COMING SOON</span>
-          </div>
-          <h2>$50,000 <span>USDT</span></h2>
-          <p>Collect eligible Mining Coins for a proportional share.</p>
-          <div class="funding-row">
-            <span>Funding in progress</span>
-            <strong>$0 / $50,000</strong>
-          </div>
-          <div class="progress"><span></span></div>
-          <button class="secondary-button" data-go="earn">View Details <span>→</span></button>
-          <small class="disclaimer">Proposed pool. Rewards are not guaranteed.</small>
+        <!-- REFER PAGE -->
+        <div id="page-refer" class="page">
+            <header class="header">
+                <h2>Invite Friends</h2>
+            </header>
+            <div class="referral-card">
+                <h3>Your Referral Link</h3>
+                <div class="link-box">
+                    <input type="text" id="ref-link" value="https://t.me/MONVEX9_bot?start=12345" readonly>
+                    <button id="copy-btn"><i class="fa-solid fa-copy"></i></button>
+                </div>
+                <button class="primary-btn mt-10"><i class="fa-solid fa-share"></i> Share Link</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box"><h4>0</h4><p>Total Invites</p></div>
+                <div class="stat-box"><h4>0</h4><p>Valid Referrals</p></div>
+            </div>
+
+            <div class="level-card">
+                <h4>Level 0</h4>
+                <p>Invite 1 valid user to reach Level 1</p>
+                <div class="progress-bar"><div class="progress" style="width: 0%;"></div></div>
+            </div>
         </div>
 
-        <div class="section-heading">
-          <h2>Quick access</h2>
-          <span>Explore MONVEX</span>
-        </div>
-        <div class="quick-grid">
-          <button class="quick-card" data-go="earn"><b>＋</b><span>Earn Coins</span></button>
-          <button class="quick-card" data-go="refer"><b>↗</b><span>Refer Friends</span></button>
-          <button class="quick-card" data-go="wallet"><b>▣</b><span>Wallet</span></button>
-        </div>
-      </section>
-
-      <section class="page" id="earnPage">
-        <p class="eyebrow">MINING GAME</p>
-        <h1>Earn <span>Coins</span></h1>
-        <p class="muted">Tap the coin to collect Mining Coins.</p>
-
-        <div class="mining-box">
-          <div class="card-label">MINING BALANCE</div>
-          <div class="coin-balance" id="earnCoins">0 <small>MVC</small></div>
-          <div class="tap-stage">
-            <button class="tap-coin" id="tapButton" aria-label="Tap to earn coins">
-              <span class="coin-letter">M</span>
-              <span class="coin-ring">MONVEX</span>
-            </button>
-          </div>
-          <div class="tap-hint" id="tapHint">Tap the coin to earn +1 MVC</div>
-          <div class="energy-row">
-            <span>Energy</span>
-            <strong id="energyText">100 / 100</strong>
-          </div>
-          <div class="progress energy-progress"><span id="energyBar"></span></div>
-          <p class="demo-note">Prototype only. Coins reset when this page is refreshed.</p>
+        <!-- WALLET PAGE -->
+        <div id="page-wallet" class="page">
+            <header class="header">
+                <h2>My Wallet</h2>
+            </header>
+            <div class="balance-card green-bg">
+                <p>Available Balance</p>
+                <h1>$0.00 <span>USDT</span></h1>
+                <button class="withdraw-btn">Withdraw</button>
+            </div>
+            <div class="section-title">Transaction History</div>
+            <div class="empty-state">No transactions yet.</div>
         </div>
 
-        <div class="pool-details">
-          <h2>Reward Pool Details</h2>
-          <p>The proposed pool distribution would depend on each eligible user's share of total eligible Mining Coins at the end of a season.</p>
-          <p class="muted">The pool is not confirmed or funded in this prototype. Mining Coins have no fixed USDT value.</p>
-        </div>
-      </section>
-
-      <section class="page" id="referPage">
-        <p class="eyebrow">GROW THE COMMUNITY</p>
-        <h1>Refer <span>& Earn</span></h1>
-        <p class="muted">Invite friends and track eligible referrals.</p>
-
-        <div class="referral-card">
-          <div class="card-label">REFERRAL USDT BALANCE</div>
-          <div class="coin-balance">$0.00 <small>USDT</small></div>
-          <p class="muted">Referral rewards are not active in this prototype.</p>
-        </div>
-
-        <div class="referral-card">
-          <div class="card-label">YOUR REFERRAL LINK</div>
-          <div class="ref-link" id="refLink">Create your Telegram link</div>
-          <button class="primary-button" id="copyRefButton">Copy Referral Link</button>
-          <p class="demo-note" id="refStatus">Your link will use your Telegram account details when available.</p>
+        <!-- PROFILE PAGE -->
+        <div id="page-profile" class="page">
+            <header class="header">
+                <h2>Profile</h2>
+            </header>
+            <div class="profile-header">
+                <img id="profile-dp" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile">
+                <h3 id="profile-name">Loading...</h3>
+                <p id="profile-id">Telegram ID: ---</p>
+            </div>
+            <div class="menu-list">
+                <div class="menu-item"><i class="fa-solid fa-gear"></i> Settings <i class="fa-solid fa-chevron-right right"></i></div>
+                <div class="menu-item"><i class="fa-solid fa-circle-question"></i> Help & Support <i class="fa-solid fa-chevron-right right"></i></div>
+                <div class="menu-item"><i class="fa-solid fa-file-contract"></i> Terms & Privacy <i class="fa-solid fa-chevron-right right"></i></div>
+            </div>
+            <p class="version">App Version 1.0.0 (Phase 1)</p>
         </div>
 
-        <div class="referral-card">
-          <h2>Referral Levels</h2>
-          <p class="muted">The planned tier rates will be shown here after eligibility rules and the funded reward budget are configured.</p>
-        </div>
-      </section>
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="navigateTo('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('earn')">
+                <i class="fa-solid fa-coins"></i>
+                <span>Earn</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('refer')">
+                <i class="fa-solid fa-user-group"></i>
+                <span>Refer</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('wallet')">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Wallet</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('profile')">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </div>
+        </nav>
+    </div>
 
-      <section class="page" id="walletPage">
-        <div class="coming-card">
-          <div class="wallet-icon">▣</div>
-          <p class="eyebrow">MONVEX WALLET</p>
-          <h1>Coming <span>Soon</span></h1>
-          <p class="muted">Wallet balance, transaction history and withdrawal features will be set up in a later phase.</p>
-          <span class="pill coming">NOT ACTIVE YET</span>
-        </div>
-      </section>
-
-      <section class="page" id="profilePage">
-        <p class="eyebrow">YOUR ACCOUNT</p>
-        <h1>My <span>Profile</span></h1>
-
-        <div class="profile-card">
-          <img id="profilePhoto" class="avatar" alt="Telegram profile photo">
-          <div>
-            <h2 id="profileName">MONVEX User</h2>
-            <p class="muted" id="profileUsername">@telegram_user</p>
-            <p class="user-id" id="profileId">Telegram ID: Not available</p>
-          </div>
-        </div>
-
-        <div class="settings-card">
-          <h2>Settings</h2>
-          <button class="setting-row" data-setting="Language"><span>Language</span><b>English / বাংলা ›</b></button>
-          <button class="setting-row" data-setting="Notifications"><span>Notifications</span><b>Manage ›</b></button>
-          <button class="setting-row" data-setting="Privacy"><span>Privacy & Security</span><b>View ›</b></button>
-          <button class="setting-row" data-setting="Help"><span>Help & Support</span><b>Contact ›</b></button>
-          <button class="setting-row" data-go="wallet"><span>Wallet</span><b>Coming Soon ›</b></button>
-        </div>
-        <p class="demo-note">Profile details are read from Telegram when available. Account verification will be added in the backend phase.</p>
-      </section>
-    </main>
-
-    <nav class="bottom-nav" aria-label="Main navigation">
-      <button class="nav-button active" data-tab="home"><span>⌂</span><small>Home</small></button>
-      <button class="nav-button" data-tab="earn"><span>◉</span><small>Earn</small></button>
-      <button class="nav-button" data-tab="refer"><span>↗</span><small>Refer</small></button>
-      <button class="nav-button" data-tab="wallet"><span>▣</span><small>Wallet</small></button>
-      <button class="nav-button" data-tab="profile"><span>●</span><small>Profile</small></button>
-    </nav>
-  </div>
-
-  <div class="toast" id="toast" role="status"></div>
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
