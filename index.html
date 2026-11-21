@@ -11,12 +11,15 @@
 </head>
 <body>
 
-    <!-- 1. FORCE JOIN SCREEN -->
+    <!-- 1. WELCOME & FORCE JOIN SCREEN -->
     <div id="join-screen" class="screen active">
         <div class="join-container">
-            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="MONVEX Logo" class="app-logo">
+            <!-- USDT Logo Added -->
+            <div class="logo-wrapper">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Tether_logo.svg/1024px-Tether_logo.svg.png" alt="USDT" class="usdt-logo">
+            </div>
             <h2>Welcome to MONVEX</h2>
-            <p>Join our official channels to start earning.</p>
+            <p>Join our official channels to start earning USDT.</p>
             
             <a href="https://t.me/officialupdatesn" target="_blank" class="join-btn">
                 <span><i class="fa-brands fa-telegram"></i> Official Updates</span>
@@ -50,7 +53,7 @@
 
             <div class="balance-card">
                 <p>Total Mining Coins</p>
-                <h1>0 <span>MC</span></h1>
+                <h1 id="home-balance">0 <span>MC</span></h1>
                 <div class="balance-footer">
                     <span>Demo Balance</span>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -58,8 +61,10 @@
             </div>
 
             <div class="banner-card">
-                <h3>Community Pool</h3>
-                <p>Proposed Reward: $50,000 USDT</p>
+                <div class="banner-content">
+                    <h3>Community Pool</h3>
+                    <p>Proposed Reward: <strong>$50,000 USDT</strong></p>
+                </div>
                 <span class="badge">Coming Soon</span>
             </div>
 
@@ -69,24 +74,15 @@
             <div class="empty-state">No recent activity found.</div>
         </div>
 
-        <!-- EARN PAGE -->
+        <!-- EARN PAGE (Dynamic Tasks will load here) -->
         <div id="page-earn" class="page">
             <header class="header">
                 <h2>Earn Rewards</h2>
             </header>
-            <div class="task-card">
-                <div class="task-info">
-                    <h4>Daily Check-in</h4>
-                    <p>Claim your daily 100 MC</p>
-                </div>
-                <button class="action-btn">Start</button>
-            </div>
-            <div class="task-card">
-                <div class="task-info">
-                    <h4>Watch Video</h4>
-                    <p>Earn 50 MC</p>
-                </div>
-                <button class="action-btn">Start</button>
+            
+            <div id="tasks-container">
+                <!-- Default tasks will be rendered via JS -->
+                <div class="task-skeleton">Loading tasks...</div>
             </div>
         </div>
 
@@ -98,10 +94,10 @@
             <div class="referral-card">
                 <h3>Your Referral Link</h3>
                 <div class="link-box">
-                    <input type="text" id="ref-link" value="https://t.me/MONVEX9_bot?start=12345" readonly>
+                    <input type="text" id="ref-link" value="https://t.me/MONVEX9_bot?start=..." readonly>
                     <button id="copy-btn"><i class="fa-solid fa-copy"></i></button>
                 </div>
-                <button class="primary-btn mt-10"><i class="fa-solid fa-share"></i> Share Link</button>
+                <button class="primary-btn mt-10" id="share-btn"><i class="fa-solid fa-share"></i> Share Link</button>
             </div>
             
             <div class="stats-grid">
@@ -150,29 +146,14 @@
 
         <!-- BOTTOM NAVIGATION -->
         <nav class="bottom-nav">
-            <div class="nav-item active" onclick="navigateTo('home')">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item" onclick="navigateTo('earn')">
-                <i class="fa-solid fa-coins"></i>
-                <span>Earn</span>
-            </div>
-            <div class="nav-item" onclick="navigateTo('refer')">
-                <i class="fa-solid fa-user-group"></i>
-                <span>Refer</span>
-            </div>
-            <div class="nav-item" onclick="navigateTo('wallet')">
-                <i class="fa-solid fa-wallet"></i>
-                <span>Wallet</span>
-            </div>
-            <div class="nav-item" onclick="navigateTo('profile')">
-                <i class="fa-solid fa-user"></i>
-                <span>Profile</span>
-            </div>
+            <div class="nav-item active" onclick="navigateTo('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item" onclick="navigateTo('earn')"><i class="fa-solid fa-coins"></i><span>Earn</span></div>
+            <div class="nav-item" onclick="navigateTo('refer')"><i class="fa-solid fa-user-group"></i><span>Refer</span></div>
+            <div class="nav-item" onclick="navigateTo('wallet')"><i class="fa-solid fa-wallet"></i><span>Wallet</span></div>
+            <div class="nav-item" onclick="navigateTo('profile')"><i class="fa-solid fa-user"></i><span>Profile</span></div>
         </nav>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
