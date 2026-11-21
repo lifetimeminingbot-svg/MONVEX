@@ -1,105 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MONVEX - Play, Mine, Earn</title>
-    <!-- Telegram Web App Script -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b14">
+  <title>MONVEX Mini App</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">MONVEX</div>
+        <div class="brand-sub">PLAY • MINE • GROW</div>
+      </div>
+      <button class="icon-button" id="profileShortcut" aria-label="Open profile">●</button>
+    </header>
 
-    <!-- 1. FORCE JOIN SCREEN (চ্যানেলে জয়েন না করলে গেমে ঢুকতে পারবে না) -->
-    <div id="force-join-screen" class="screen active">
-        <div class="force-join-container">
-            <!-- এখানে আপনার বটের ছবির লিংক বসাতে পারেন, আপাতত ডিফল্ট ছবি দেওয়া হলো -->
-            <img src="https://i.ibb.co/6PZ8Z9Z/monvex-bot.jpg" alt="MONVEX Bot" class="bot-logo"> 
-            <h1>Join Our Community</h1>
-            <p>You must join our official channels to play MONVEX and earn rewards.</p>
-            
-            <div class="channel-list">
-                <!-- Official Updates Channel -->
-                <a href="https://t.me/officialupdatesn" target="_blank" class="join-btn">
-                    <span>📢 Official Updates</span> <span>Join</span>
-                </a>
-                <!-- Community Channel -->
-                <a href="https://t.me/monvexcommunity" target="_blank" class="join-btn">
-                    <span>💬 MONVEX Community</span> <span>Join</span>
-                </a>
-            </div>
-
-            <button id="verify-btn" class="verify-btn">Verify & Continue</button>
-            <p class="small-text" id="verify-message"></p>
-        </div>
-    </div>
-
-    <!-- 2. MAIN DASHBOARD (গেমের হোম পেজ) -->
-    <div id="main-screen" class="screen">
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <div class="profile-info">
-                <!-- টেলিগ্রাম থেকে ডিপি অটোমেটিক আসবে -->
-                <img id="user-photo" src="https://i.ibb.co/3W1Z8Y7/default-avatar.png" alt="Profile">
-                <div>
-                    <h2 id="user-name">Loading...</h2>
-                    <span id="user-level">Level 1</span>
-                </div>
-            </div>
-            <div class="balance-info">
-                <span class="coin-icon">🪙</span>
-                <span id="coin-balance">0</span>
-            </div>
+    <main>
+      <section class="page active" id="homePage">
+        <div class="welcome">
+          <p class="eyebrow">WELCOME TO MONVEX</p>
+          <h1>Mine your<br><span>next level.</span></h1>
+          <p class="muted">Tap, complete tasks, and track your progress.</p>
         </div>
 
-        <!-- Promotional Banner (Reward Pool) -->
-        <div class="promo-banner">
-            <div class="promo-content">
-                <span class="badge">PROPOSED</span>
-                <h1>$50,000 USDT</h1>
-                <h2>REWARD POOL</h2>
-                <p>COMING SOON ⏳</p>
-                <p class="funding-text">Funding in progress: $0 / $50,000</p>
-                <button id="view-details-btn">View Details</button>
-            </div>
+        <div class="balance-card">
+          <div class="card-label">YOUR MINING COINS</div>
+          <div class="coin-balance" id="homeCoins">0 <small>MVC</small></div>
+          <div class="card-foot">Demo balance · Not USDT</div>
         </div>
 
-        <!-- Tap to Mine Section -->
-        <div class="tap-section">
-            <div class="energy-bar">
-                <span>Energy: <span id="energy-count">1000</span> / 1000</span>
-            </div>
-            <div class="tap-circle" id="tap-circle">
-                <span class="tap-text">TAP</span>
-                <span class="tap-power">+1</span>
-            </div>
+        <div class="pool-banner">
+          <div class="pool-top">
+            <span class="pill">PROPOSED REWARD POOL</span>
+            <span class="pill coming">COMING SOON</span>
+          </div>
+          <h2>$50,000 <span>USDT</span></h2>
+          <p>Collect eligible Mining Coins for a proportional share.</p>
+          <div class="funding-row">
+            <span>Funding in progress</span>
+            <strong>$0 / $50,000</strong>
+          </div>
+          <div class="progress"><span></span></div>
+          <button class="secondary-button" data-go="earn">View Details <span>→</span></button>
+          <small class="disclaimer">Proposed pool. Rewards are not guaranteed.</small>
         </div>
 
-        <!-- Navigation -->
-        <div class="bottom-nav">
-            <button class="nav-item active">🏠 Home</button>
-            <button class="nav-item">⛏️ Mine</button>
-            <button class="nav-item">👥 Friends</button>
-            <button class="nav-item">💼 Wallet</button>
+        <div class="section-heading">
+          <h2>Quick access</h2>
+          <span>Explore MONVEX</span>
         </div>
-    </div>
-
-    <!-- 3. REWARD POOL MODAL (View Details) -->
-    <div id="reward-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <h2>🏆 Reward Pool Details</h2>
-            <p><strong>Total Pool:</strong> $50,000 USDT (Proposed)</p>
-            <p><strong>Funding Status:</strong> In Progress</p>
-            <hr>
-            <h3>How it works:</h3>
-            <p>Collect Mining Coins during the season. At the end of the season, your share is calculated proportionally based on your eligible coins.</p>
-            <p class="formula">User Reward = (Your Coins / Total Coins) × Funded Pool</p>
-            <p class="disclaimer">⚠️ Note: Mining Coins have no fixed USD value. Rewards are distributed only up to the actual funded amount.</p>
+        <div class="quick-grid">
+          <button class="quick-card" data-go="earn"><b>＋</b><span>Earn Coins</span></button>
+          <button class="quick-card" data-go="refer"><b>↗</b><span>Refer Friends</span></button>
+          <button class="quick-card" data-go="wallet"><b>▣</b><span>Wallet</span></button>
         </div>
-    </div>
+      </section>
 
-    <!-- Load Scripts -->
-    <script type="module" src="app.js"></script>
+      <section class="page" id="earnPage">
+        <p class="eyebrow">MINING GAME</p>
+        <h1>Earn <span>Coins</span></h1>
+        <p class="muted">Tap the coin to collect demo Mining Coins.</p>
+
+        <div class="mining-box">
+          <div class="card-label">MINING BALANCE</div>
+          <div class="coin-balance" id="earnCoins">0 <small>MVC</small></div>
+          <div class="tap-stage">
+            <button class="tap-coin" id="tapButton" aria-label="Tap to earn coins">
+              <span class="coin-letter">M</span>
+              <span class="coin-ring">MONVEX</span>
+            </button>
+          </div>
+          <div class="tap-hint" id="tapHint">Tap the coin to earn +1 MVC</div>
+          <div class="energy-row">
+            <span>Energy</span>
+            <strong id="energyText">100 / 100</strong>
+          </div>
+          <div class="progress energy-progress"><span id="energyBar"></span></div>
+          <p class="demo-note">Prototype only. Coins reset when this page is refreshed.</p>
+        </div>
+
+        <div class="pool-details">
+          <h2>Reward Pool Details</h2>
+          <p>The proposed pool distribution would depend on each eligible user's share of total eligible Mining Coins at the end of a season.</p>
+          <p class="muted">The pool is not confirmed or funded in this prototype. Mining Coins have no fixed USDT value.</p>
+        </div>
+      </section>
+
+      <section class="page" id="referPage">
+        <p class="eyebrow">GROW THE COMMUNITY</p>
+        <h1>Refer <span>& Earn</span></h1>
+        <p class="muted">Invite friends and track eligible referrals.</p>
+
+        <div class="referral-card">
+          <div class="card-label">REFERRAL USDT BALANCE</div>
+          <div class="coin-balance">$0.00 <small>USDT</small></div>
+          <p class="muted">Referral rewards are not active in this prototype.</p>
+        </div>
+
+        <div class="referral-card">
+          <div class="card-label">YOUR REFERRAL LINK</div>
+          <div class="ref-link" id="refLink">Create your Telegram link</div>
+          <button class="primary-button" id="copyRefButton">Copy Referral Link</button>
+          <p class="demo-note" id="refStatus">Your link will use your Telegram account details when available.</p>
+        </div>
+
+        <div class="referral-card">
+          <h2>Referral Levels</h2>
+          <p class="muted">The planned tier rates will be shown here after eligibility rules and the funded reward budget are configured.</p>
+        </div>
+      </section>
+
+      <section class="page" id="walletPage">
+        <div class="coming-card">
+          <div class="wallet-icon">▣</div>
+          <p class="eyebrow">MONVEX WALLET</p>
+          <h1>Coming <span>Soon</span></h1>
+          <p class="muted">Wallet balance, transaction history and withdrawal features will be set up in a later phase.</p>
+          <span class="pill coming">NOT ACTIVE YET</span>
+        </div>
+      </section>
+
+      <section class="page" id="profilePage">
+        <p class="eyebrow">YOUR ACCOUNT</p>
+        <h1>My <span>Profile</span></h1>
+
+        <div class="profile-card">
+          <img id="profilePhoto" class="avatar" alt="Telegram profile photo">
+          <div>
+            <h2 id="profileName">MONVEX User</h2>
+            <p class="muted" id="profileUsername">@telegram_user</p>
+            <p class="user-id" id="profileId">Telegram ID: Not available</p>
+          </div>
+        </div>
+
+        <div class="settings-card">
+          <h2>Settings</h2>
+          <button class="setting-row" data-setting="Language"><span>Language</span><b>English / বাংলা ›</b></button>
+          <button class="setting-row" data-setting="Notifications"><span>Notifications</span><b>Manage ›</b></button>
+          <button class="setting-row" data-setting="Privacy"><span>Privacy & Security</span><b>View ›</b></button>
+          <button class="setting-row" data-setting="Help"><span>Help & Support</span><b>Contact ›</b></button>
+          <button class="setting-row" data-go="wallet"><span>Wallet</span><b>Coming Soon ›</b></button>
+        </div>
+        <p class="demo-note">Profile details are read from Telegram when available. Account verification will be added in the backend phase.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-button active" data-tab="home"><span>⌂</span><small>Home</small></button>
+      <button class="nav-button" data-tab="earn"><span>◉</span><small>Earn</small></button>
+      <button class="nav-button" data-tab="refer"><span>↗</span><small>Refer</small></button>
+      <button class="nav-button" data-tab="wallet"><span>▣</span><small>Wallet</small></button>
+      <button class="nav-button" data-tab="profile"><span>●</span><small>Profile</small></button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
 </body>
 </html>
